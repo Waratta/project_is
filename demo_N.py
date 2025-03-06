@@ -7,7 +7,7 @@ import pandas as pd
 import io
 import matplotlib.pyplot as plt
 
-st.title("Demo Neural Network")
+st.title("Demo Neural Network for mnist")
 
 # Load dataset
 file_path = "mnist_test.csv"
