@@ -1,5 +1,5 @@
 import streamlit as st
+import pandas as pd
+import numpy as np
 
 st.title("Neural Network")
-
-st.text("เกี่ยวกับ MNIST test | ชุดข้อมูลรูปภาพตัวเลขอารบิก ที่เขียนด้วยลายมือ")
