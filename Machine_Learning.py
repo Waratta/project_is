@@ -3,29 +3,78 @@ import pandas as pd
 
 st.title("Machine Learning")
 
-st.text("เกี่ยวกับ California Housing Prices | ราคาบ้านในรัฐแคลิฟอเนีย")
-st.markdown("download มาจาก https://www.kaggle.com/datasets/camnugent/california-housing-prices")
+st.text("เกี่ยวกับ  Flight Price Dataset of Bangladesh | ราคาตั๋วเครื่องบินในบังคลาเทศ")
+st.markdown("download มาจาก https://www.kaggle.com/datasets/mahatiratusher/flight-price-dataset-of-bangladesh")
 
 st.write("## 📌อธิบาย feature ของ Dataset")
+st.markdown("### 1. Categorical Features (ข้อมูลหมวดหมู่)")
+st.markdown("ข้อมูลประเภทหมวดหมู่จะถูกเข้ารหัสเป็นตัวเลขโดยใช้ OneHotEncoder ในขั้นตอนการพัฒนาโมเดล")
 df = pd.DataFrame(
     {
-        "คอลัมน์": ["longitude", "latitude"
-                ,"housing_median_age","total_rooms","total_bedrooms","population",
-                "households","median_income","median_house_value","ocean_proximity"],
+        "Feature": ["Airline", "Source"
+                ,"Source Name","Destination","Destination Name","Stopovers",
+                "Aircraft Type","Class","Booking Source","Seasonality"],
 
-        "คำอธิบาย": ["ค่าพิกัดลองจิจูดของพื้นที่ที่อยู่อาศัย", "ค่าพิกัดละติจูดของพื้นที่ที่อยู่อาศัย"
-                ,"อายุเฉลี่ยของบ้านในบริเวณนั้น(หน่วยเป็นปี)","จำนวนห้องทั้งหมดในพื้นที่นั้น"
-                ,"จำนวนห้องนอนทั้งหมดในพื้นที่นั้น","จำนวนประชากรที่อาศัยอยู่ในพื้นที่นั้น",
-                "จำนวนครัวเรือนในพื้นที่นั้น","รายได้เฉลี่ยของครัวเรือน(วัดเป็นสัดส่วนจากค่าเฉลี่ยของสหรัฐ)"
-                ,"มูลค่าบ้านเฉลี่ยในพื้นที่นั้น","ระยะห่างจากมหาสมุทร"]
+        "ความหมาย": ["ชื่อสายการบิน", "รหัสสนามบินต้นทาง"
+                ,"ชื่อสนามบินต้นทาง","รหัสสนามบินปลายทาง"
+                ,"ชื่อสนามบินปลายทาง","จำนวนจุดแวะพัก","ประเภทของเครื่องบิน","ชั้นโดยสารของตั๋ว"
+                ,"ช่องทางการจอง","ฤดูกาลของเที่ยวบิน"]
     }
 )
 st.data_editor(
     df,
     column_config={
-        "คอลัมน์":"คอลัมน์",
-        "คำอธิบาย": st.column_config.TextColumn(
-            "คำอธิบาย",
+        "Feature":"Feature",
+        "ความหมาย": st.column_config.TextColumn(
+            "ความหมาย",
+            default="st.",
+            max_chars=50,
+            validate=r"^st\.[a-z_]+$",
+        )
+    },
+    hide_index=True,
+)
+st.markdown("### 2. Numerical Features (ข้อมูลเชิงตัวเลข)")
+st.markdown("ข้อมูลประเภทตัวเลขจะถูกปรับขนาดโดยใช้ StandardScaler เพื่อให้ข้อมูลอยู่ในช่วงเดียวกัน")
+df = pd.DataFrame(
+    {
+        "Feature": ["Duration (hrs)", "Base Fare (BDT)"
+                ,"Tax & Surcharge (BDT)","Total Fare (BDT)","Days Before Departure"],
+
+        "ความหมาย": ["ระยะเวลาในการเดินทาง (ชั่วโมง)", "ราคาตั๋วพื้นฐาน (ก่อนบวกภาษีและค่าธรรมเนียม)"
+                ,"ภาษีและค่าธรรมเนียม","ราคารวมหลังจากรวมภาษีและค่าธรรมเนียม"
+                ,"	จำนวนวันก่อนการเดินทาง"]
+    }
+)
+st.data_editor(
+    df,
+    column_config={
+        "Feature":"Feature",
+        "ความหมาย": st.column_config.TextColumn(
+            "ความหมาย",
+            default="st.",
+            max_chars=50,
+            validate=r"^st\.[a-z_]+$",
+        )
+    },
+    hide_index=True,
+)
+
+st.markdown("### 3. Date-Time Features (ข้อมูลประเภทวันและเวลา)")
+st.markdown("ข้อมูลประเภทเวลาอาจถูกแปลงเป็น Feature ใหม่ เช่น ช่วงเวลา หรือ วันในสัปดาห์")
+df = pd.DataFrame(
+    {
+        "Feature": ["Departure Date & Time", "Arrival Date & Time"],
+
+        "ความหมาย": ["วันและเวลาที่ออกเดินทาง", "วันและเวลาที่มาถึง"]
+    }
+)
+st.data_editor(
+    df,
+    column_config={
+        "Feature":"Feature",
+        "ความหมาย": st.column_config.TextColumn(
+            "ความหมาย",
             default="st.",
             max_chars=50,
             validate=r"^st\.[a-z_]+$",
@@ -35,32 +84,49 @@ st.data_editor(
 )
 
 st.write("## 📌การเตรียมข้อมูล")
-st.markdown("1. Pipeline สำหรับตัวแปรเชิงตัวเลข ใช้ค่ามัธยฐาน(median) เติมค่าที่หายไป เเละใช้ StandardScaler() ทำ Feature Scaling")
+st.markdown("1. เลือก Features ที่มีความสำคัญ")
+st.markdown("✅ เหตุผลในการเลือก Features :")
+st.markdown("- Duration (hrs) → ระยะเวลาการเดินทางมีผลต่อราคา\n"
+"\n- Stopovers → จำนวนจุดแวะพักส่งผลต่อความสะดวกสบายและราคา\n"
+"\n- Class → ชั้นโดยสารส่งผลต่อราคาตั๋ว\n"
+"\n- Days Before Departure → ระยะห่างก่อนการเดินทางมักส่งผลต่อราคา (ยิ่งใกล้วันเดินทาง ราคามักสูงขึ้น)")
 
-code = '''# Pipeline สำหรับตัวแปรเชิงตัวเลข
-num_pipeline = Pipeline([
-    ("imputer", SimpleImputer(strategy="median")),
-    ("scaler", StandardScaler())
-])'''
+code = '''# เลือก Feature ที่มีความสำคัญ
+features = ["Duration (hrs)", "Stopovers", "Class", "Days Before Departure"]
+target = "Total Fare (BDT)"'''
 st.code(code, language="python")
 
-st.markdown("2. แปลงข้อมูลประเภทหมวดหมู่ เนื่องจาก ocean_proximity เป็นข้อมูลแบบ หมวดหมู่ (Categorical) เราต้องแปลงให้เป็นตัวเลข โดยใช้ One-Hot Encoding")
+st.markdown("2. จัดการประเภทข้อมูล (Categorical & Numerical)")
+st.markdown("ในโค้ด ได้แยกประเภทข้อมูลออกเป็น :")
+st.markdown("- Categorical Features : Stopovers , Class")
+st.markdown("- Numeric Features : Duration (hrs) , Days Before Departure")
 
-code = '''# Pipeline สำหรับตัวแปรหมวดหมู่
-cat_pipeline = Pipeline([
-    ("encoder", OneHotEncoder(handle_unknown="ignore"))
-])'''
+code = '''# แยกประเภทของ Features
+numeric_features = ["Duration (hrs)", "Days Before Departure"]
+categorical_features = ["Stopovers", "Class"]'''
 st.code(code, language="python")
 
-st.markdown("3. รวมทั้งสอง Pipeline ใช้ ColumnTransformer() รวมทั้ง Numerical Pipeline และ Categorical Pipeline")
+st.markdown("3. การทำ Preprocessing ด้วย ColumnTransformer")
+st.markdown("ในโค้ดใช้ ColumnTransformer เพื่อจัดการกับข้อมูลประเภทต่าง ๆ :\n"
+"\n- ใช้ StandardScaler เพื่อปรับขนาดข้อมูลเชิงตัวเลขให้อยู่ในช่วงเดียวกัน\n"
+"\n- ใช้ OneHotEncoder เพื่อแปลงข้อมูลเชิงหมวดหมู่ให้กลายเป็นตัวเลข (0, 1)")
 
-code = '''# รวมทุก Pipeline
+code = '''# แปลงข้อมูล Categorical เป็นตัวเลข
 preprocessor = ColumnTransformer([
-    ("num", num_pipeline, num_features),
-    ("cat", cat_pipeline, cat_features)
+    ("num", StandardScaler(), numeric_features),
+    ("cat", OneHotEncoder(handle_unknown='ignore'), categorical_features)
 ])'''
 st.code(code, language="python")
 
+st.markdown("4. แบ่งข้อมูลเป็น Train/Test")
+st.markdown("แบ่งข้อมูลออกเป็นชุด Train และ Test โดยใช้ train_test_split:\n"
+"\n- Train Set: 80% → ใช้สำหรับ Train โมเดล\n"
+"\n- Test Set: 20% → ใช้สำหรับประเมินผล")
+
+code = '''# แบ่งชุดข้อมูล train/test
+X_train, X_test, y_train, y_test = train_test_split(df[features], df[target], test_size=0.2, random_state=42)
+'''
+st.code(code, language="python")
 
 st.write("## 📌ทฤษฎีของ Linear Regression")
 st.markdown("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;เป็น Machine Learning ประเภท Supervised Learning ต้องมี dataset ที่มีตัวแปรต้นและตัวแปรตาม "
@@ -85,67 +151,61 @@ st.markdown("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Random Forest = รวม
 "\nแต่ละ Decision Tree เป็น weak learner → รวมกันแล้วได้ model ที่แม่นยำขึ้น")
 
 st.write("## 📌ขั้นตอนการพัฒนาโมเดล")
-st.markdown("1. แบ่งข้อมูล Train & Test")
+st.markdown("1. การ Train & Test โมเดลทั้ง Linear Regression เเละ Random Forest")
+st.markdown("ใช้ fit() เพื่อสอนโมเดลด้วยข้อมูล Training Set :")
+st.markdown("ใช้ predict() เพื่อทำนายข้อมูลใน Test Set :")
 
-code = '''from sklearn.model_selection import train_test_split
-
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)'''
+code = '''# สร้างโมเดล Linear Regression
+lr_pipeline = Pipeline([
+    ("preprocessor", preprocessor),
+    ("model", LinearRegression())
+])
+lr_pipeline.fit(X_train, y_train)
+y_pred_lr = lr_pipeline.predict(X_test)'''
 st.code(code, language="python")
 
-st.markdown("2. เทรนและประเมินผลโมเดล สร้าง Dictionary ที่เก็บโมเดล Linear Regression และ Random Forest")
-code = '''# สร้างโมเดลและประเมินผล
-models = {
-    "Linear Regression": LinearRegression(),
-    "Random Forest Regressor": RandomForestRegressor(n_estimators=100, random_state=42)
-}'''
+code = '''# สร้างโมเดล Random Forest
+rf_pipeline = Pipeline([
+    ("preprocessor", preprocessor),
+    ("model", RandomForestRegressor(n_estimators=100, random_state=42))
+])
+rf_pipeline.fit(X_train, y_train)
+y_pred_lr = lr_pipeline.predict(X_test)'''
 st.code(code, language="python")
 
-st.markdown("✅ วนลูปเทรนโมเดล\n"
-            "1. สร้าง Pipeline (preprocessor + regressor)\n"
-            "2. เทรนโมเดลด้วย .fit()\n"
-            "3. ทำนายค่าด้วย .predict()\n"
-            "4. คำนวณ Mean Absolute Error (MAE)\n"
-            "5. คำนวณ Root Mean Squared Error (RMSE)")
+st.markdown("2. การประเมินผล (Evaluation)")
+st.markdown("ใช้ Mean Absolute Error (MAE) เพื่อวัดความแม่นยำของโมเดล :")
 
-code = '''results = []
-feature_importance = {}
+code = '''# ประเมินผล
+mae_lr = mean_absolute_error(y_test, y_pred_lr)
+mae_rf = mean_absolute_error(y_test, y_pred_rf)'''
+st.code(code, language="python")
 
-for model_name, model in models.items():
-    pipeline = Pipeline([("preprocessor", preprocessor), ("regressor", model)])
-    pipeline.fit(X_train, y_train)
-    y_pred = pipeline.predict(X_test)
 
-    mae = mean_absolute_error(y_test, y_pred)
-    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    
-    results.append({"Model": model_name, "MAE": mae, "RMSE": rmse})
-    
-    if hasattr(model, 'feature_importances_'):
-        feature_importance[model_name] = model.feature_importances_
+st.markdown("3. การแสดงผล (Visualization)")
+st.markdown("ในโค้ดมีการใช้ matplotlib เพื่อแสดงกราฟเปรียบเทียบค่าที่ทำนายกับค่าจริง :")
+st.markdown("โค้ดกราฟ Linear Regression")
+
+code = '''fig1, ax1 = plt.subplots(figsize=(10, 5))
+ax1.plot(sample_indices, y_test_sampled, label="Actual Values", color='black', linestyle='dotted')
+ax1.plot(sample_indices, y_pred_lr_sampled, label="Linear Regression Predictions", color='blue')
+ax1.legend()
+ax1.set_title("Actual vs Linear Regression Predictions")
+ax1.set_xlabel("Sample Index")
+ax1.set_ylabel("Total Fare (BDT)")
+st.pyplot(fig1)
 '''
 st.code(code, language="python")
 
-st.markdown("3. แสดงผลลัพธ์ใน Streamlit แสดง ผลลัพธ์ของโมเดล (MAE & RMSE) ในรูปแบบ DataFrame ใช้ Seaborn Bar Chart เปรียบเทียบโมเดล")
-code = '''# แสดงผลลัพธ์ใน Streamlit
-results_df = pd.DataFrame(results)
-st.write("## ผลลัพธ์ของโมเดล")
-st.dataframe(results_df)
+st.markdown("โค้ดกราฟ Random Forest")
 
-# วาดกราฟเปรียบเทียบ MAE และ RMSE
-fig, ax = plt.subplots(1, 2, figsize=(12, 5))
-
-# กราฟ MAE
-sns.barplot(x="Model", y="MAE", data=results_df, ax=ax[0], palette="Blues_r")
-ax[0].set_title("Mean Absolute Error (MAE)")
-ax[0].set_ylabel("MAE")
-ax[0].set_xlabel("Model")
-
-# กราฟ RMSE
-sns.barplot(x="Model", y="RMSE", data=results_df, ax=ax[1], palette="Reds_r")
-ax[1].set_title("Root Mean Squared Error (RMSE)")
-ax[1].set_ylabel("RMSE")
-ax[1].set_xlabel("Model")
-
-st.pyplot(fig)
+code = '''fig2, ax2 = plt.subplots(figsize=(10, 5))
+ax2.plot(sample_indices, y_test_sampled, label="Actual Values", color='black', linestyle='dotted')
+ax2.plot(sample_indices, y_pred_rf_sampled, label="Random Forest Predictions", color='red')
+ax2.legend()
+ax2.set_title("Actual vs Random Forest Predictions")
+ax2.set_xlabel("Sample Index")
+ax2.set_ylabel("Total Fare (BDT)")
+st.pyplot(fig2)
 '''
 st.code(code, language="python")
