@@ -2,6 +2,10 @@ import streamlit as st
 import pandas as pd
 
 st.title("Neural Network")
+st.markdown("<p style='text-align: right;'>สมาชิก 1 : นางสาววรัชฐญา จั่นเล็ก 6604062610535</p>",
+            unsafe_allow_html=True)
+st.markdown("<p style='text-align: right;'>สมาชิก 2 : นางสาวสุชานันท์ ปิ่นทอง 6604062610578</p>",
+            unsafe_allow_html=True)
 
 st.text("เกี่ยวกับ mnist | ข้อมูลตัวเลขที่เขียนด้วยลายมือ")
 st.markdown("download มาจาก https://www.kaggle.com/datasets/oddrationale/mnist-in-csv")
