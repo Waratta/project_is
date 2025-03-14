@@ -32,7 +32,7 @@ def create_model():
 
 model = create_model()
 
-# Function to convert model summary to string (เพื่อใช้กับ st.code หรือ st.markdown)
+# Function to convert model summary to string
 def get_model_summary(model):
     string_io = io.StringIO()
     model.summary(print_fn=lambda x: string_io.write(x + "\n"))
@@ -40,11 +40,10 @@ def get_model_summary(model):
     string_io.close()
     return summary_string
 
-# Display model summary (ในรูปแบบ markdown หรือ code block)
+# Display model summary
 st.subheader("Model Summary")
 summary_string = get_model_summary(model)
 
-# ใช้ st.code เพื่อแสดงรูปแบบเหมือน Terminal
 st.code(summary_string, language="text")
 
 if st.button("Train Model"):

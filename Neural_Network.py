@@ -80,13 +80,21 @@ def create_model():
 st.code(code, language="python")
 
 st.markdown("2. แสดงโครงสร้างของโมเดล ใช้ model.summary() เพื่อแสดงรายละเอียดของโมเดล เช่น จำนวนพารามิเตอร์และ Layer ต่างๆ")
-st.markdown("&nbsp;ช่วยให้เห็นว่าโมเดลมี Layer อะไรบ้าง และมีพารามิเตอร์ที่ต้องเรียนรู้กี่ตัว")
 
-code = '''# Display model summary
+code = '''# Function to convert model summary to string
+def get_model_summary(model):
+    string_io = io.StringIO()
+    model.summary(print_fn=lambda x: string_io.write(x + "\n"))
+    summary_string = string_io.getvalue()
+    string_io.close()
+    return summary_string
+
+# Display model summary
 st.subheader("Model Summary")
-string_io = io.StringIO()
-model.summary(print_fn=lambda x: string_io.write(x + "\n"))
-st.text(string_io.getvalue())'''
+summary_string = get_model_summary(model)
+
+st.code(summary_string, language="text")
+'''
 st.code(code, language="python")
 
 st.markdown("3. การฝึกโมเดล (Model Training)\n "
