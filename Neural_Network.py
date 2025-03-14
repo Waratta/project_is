@@ -142,3 +142,6 @@ code = '''# Plot training history
     st.pyplot(fig)'''
 st.code(code, language="python")
 
+st.markdown("<p style='text-align: right;'>อ้างอิงจาก chatGPT</p>",
+            unsafe_allow_html=True)
+
