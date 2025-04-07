@@ -7,7 +7,7 @@ st.markdown("<p style='text-align: right;'>สมาชิก 1 : นางส�
 st.markdown("<p style='text-align: right;'>สมาชิก 2 : นางสาวสุชานันท์ ปิ่นทอง 6604062610578</p>",
             unsafe_allow_html=True)
 
-st.text("เกี่ยวกับ  Flight Price Dataset of Bangladesh | ราคาตั๋วเครื่องบินในบังคลาเทศ")
+st.text("เกี่ยวกับ Flight Price Dataset of Bangladesh | ราคาตั๋วเครื่องบินในบังคลาเทศ")
 st.markdown("download มาจาก https://www.kaggle.com/datasets/mahatiratusher/flight-price-dataset-of-bangladesh")
 
 st.write("## 📌อธิบาย feature ของ Dataset")
